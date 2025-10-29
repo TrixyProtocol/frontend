@@ -1,10 +1,6 @@
 const DEFAULT_API_URL = "http://localhost:3000/api";
 
-function apiSuffix(url: string): string {
-  return url.endsWith("/api") ? url : `${url.replace(/\/$/, "")}/api`;
-}
-
-const API_BASE_URL = apiSuffix(process.env.API_URL || DEFAULT_API_URL);
+const API_BASE_URL = DEFAULT_API_URL;
 
 function buildUrl(
   base: string,
@@ -12,7 +8,8 @@ function buildUrl(
   params?: Record<string, string | number>,
 ) {
   const normalizedPath = path.startsWith("/") ? path.slice(1) : path;
-  const url = new URL(normalizedPath, base);
+  const baseWithSlash = base.endsWith("/") ? base : `${base}/`;
+  const url = new URL(normalizedPath, baseWithSlash);
 
   if (params) {
     Object.entries(params).forEach(([key, value]) =>

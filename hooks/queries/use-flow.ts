@@ -71,6 +71,6 @@ export const useLatestBlock = () => {
   return useQuery({
     queryKey: ["blockchain", "latest-block"],
     queryFn: () => flowService.getLatestBlock(),
-    refetchInterval: 5000, // Refetch every 5 seconds
+    refetchInterval: 5000,
   });
 };

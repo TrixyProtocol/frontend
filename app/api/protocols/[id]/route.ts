@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
+import { BACKEND_URL } from "@/lib/backend-url";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const url = `${BACKEND_URL}/api/protocols/${id}`;
+  const url = `${BACKEND_URL}/protocols/${id}`;
 
   try {
     const response = await fetch(url, {

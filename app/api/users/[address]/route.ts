@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
+import { BACKEND_URL } from "@/lib/backend-url";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ address: string }> },
 ) {
   const { address } = await params;
-  const url = `${BACKEND_URL}/api/users/${address}`;
+  const url = `${BACKEND_URL}/users/${address}`;
 
   try {
     const response = await fetch(url, {

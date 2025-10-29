@@ -47,3 +47,28 @@ export const useBetStats = (userAddress?: string) => {
     queryFn: () => betService.getBetStats(userAddress),
   });
 };
+
+export const useMarketActivity = (
+  marketId: number,
+  params?: { limit?: number; offset?: number },
+  enabled = true,
+) => {
+  return useQuery({
+    queryKey: ["market", marketId, "activity", params],
+    queryFn: () => betService.getFlowMarketBets(marketId, params),
+    enabled: enabled && !!marketId,
+    refetchInterval: 10000,
+  });
+};
+
+export const useFlowBets = (
+  params?: { limit?: number; offset?: number; user?: string },
+  enabled = true,
+) => {
+  return useQuery({
+    queryKey: ["flow", "bets", params],
+    queryFn: () => betService.getFlowBets(params),
+    enabled,
+    refetchInterval: 10000,
+  });
+};

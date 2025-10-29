@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
+import { BACKEND_URL } from "@/lib/backend-url";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ market_id: string }> },
 ) {
   const { market_id } = await params;
-  const url = `${BACKEND_URL}/api/flow/markets/${market_id}`;
+  const url = `${BACKEND_URL}/flow/markets/${market_id}`;
 
   try {
     const response = await fetch(url, {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
+import { BACKEND_URL } from "@/lib/backend-url";
 
 export async function GET(
   request: NextRequest,
@@ -9,7 +9,7 @@ export async function GET(
   const { id } = await params;
   const { searchParams } = new URL(request.url);
   const queryString = searchParams.toString();
-  const url = `${BACKEND_URL}/api/charts/market/${id}${queryString ? `?${queryString}` : ""}`;
+  const url = `${BACKEND_URL}/charts/market/${id}${queryString ? `?${queryString}` : ""}`;
 
   try {
     const response = await fetch(url, {

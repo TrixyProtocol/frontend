@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8080";
+import { BACKEND_URL } from "@/lib/backend-url";
 
 export async function GET() {
-  const url = `${BACKEND_URL}/api/blockchain/status`;
+  const url = `${BACKEND_URL}/blockchain/status`;
 
   try {
     const response = await fetch(url, {

@@ -46,7 +46,7 @@ export default async function GlobalNotFound() {
   return (
     <html suppressHydrationWarning lang="en">
       <body>
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-svh">
           <div className="flex flex-col items-center gap-2">
             <div className="flex flex-col items-center gap-2 mb-4">
               <h1 className="text-7xl text-black">404</h1>

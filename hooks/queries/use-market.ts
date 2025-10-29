@@ -5,9 +5,9 @@ import { marketService } from "@/services/market.service";
 export const useMarkets = (params?: {
   limit?: number;
   offset?: number;
-  status?: string;
-  sort_by?: string;
-  order?: string;
+  status?: "active" | "resolved" | "all";
+  sort_by?: "end_time" | "transaction_version";
+  order?: "asc" | "desc";
 }) => {
   return useQuery({
     queryKey: ["markets", params],

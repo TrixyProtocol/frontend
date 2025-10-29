@@ -1,17 +1,18 @@
 "use client";
+import { useState, useEffect } from "react";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
-  Input,
-  DropdownItem,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  Avatar,
-  Kbd,
   Image,
+  Button,
 } from "@heroui/react";
+import Link from "next/link";
+import { Search } from "lucide-react";
+
+import { FlowWalletConnect } from "@/components/flow-wallet-connect";
+import { SearchPopover } from "@/components/search/search-popover";
+import { SearchDrawer } from "@/components/search/search-drawer";
 
 export const AcmeLogo = () => {
   return (
@@ -26,117 +27,84 @@ export const AcmeLogo = () => {
   );
 };
 
-export const SearchIcon = ({
-  size = 24,
-  strokeWidth = 1.5,
-  width,
-  height,
-  ...props
-}: {
-  size?: number;
-  strokeWidth?: number;
-  width?: number;
-  height?: number;
-  [key: string]: any;
-}) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height={height || size}
-      role="presentation"
-      viewBox="0 0 24 24"
-      width={width || size}
-      {...props}
-    >
-      <path
-        d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={strokeWidth}
-      />
-      <path
-        d="M22 22L20 20"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={strokeWidth}
-      />
-    </svg>
-  );
-};
-
 export default function App() {
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-        base: "max-w-[300px]",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
+  const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
+  const [isSearchDrawerOpen, setIsSearchDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+
+        const isMobile = window.innerWidth < 1024;
+
+        if (isMobile) {
+          setIsSearchDrawerOpen(true);
+        } else {
+          setIsSearchPopoverOpen(true);
+
+          setTimeout(() => {
+            const searchInput = document.querySelector(
+              'input[type="search"]',
+            ) as HTMLInputElement;
+
+            if (searchInput) {
+              searchInput.focus();
+            }
+          }, 100);
+        }
       }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none shrink-0" />
-      }
-      type="search"
-    />
-  );
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <Navbar isBordered classNames={{ wrapper: "max-w-7xl" }}>
       <NavbarContent justify="start">
-        <NavbarBrand className="mr-4 gap-2">
-          <Image
-            alt="Trixy Logo"
-            className="rounded-none"
-            height={32}
-            src={"/logo-white.png"}
-            width={32}
-          />
-          <h1 className="font-black text-2xl">Trixy</h1>
-        </NavbarBrand>
+        <Link href="/">
+          <NavbarBrand className="mr-4 gap-2">
+            <Image
+              alt="Trixy Logo"
+              className="rounded-none"
+              height={32}
+              src={"/logo-white.png"}
+              width={32}
+            />
+            <h1 className="hidden sm:block font-black text-2xl">Trixy</h1>
+          </NavbarBrand>
+        </Link>
       </NavbarContent>
 
-      <NavbarContent as="div" className="items-center" justify="end">
-        {searchInput}
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger className="cursor-pointer">
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="primary"
-              name="Jason Hughes"
-              size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-            />
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              Log Out
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+      <NavbarContent as="div" className="items-center gap-3" justify="end">
+        <div className="hidden lg:block">
+          <SearchPopover
+            isOpen={isSearchPopoverOpen}
+            onOpenChange={setIsSearchPopoverOpen}
+          />
+        </div>
+
+        <Button
+          isIconOnly
+          className="lg:hidden h-10 w-10 bg-default-100 rounded-xl"
+          size="sm"
+          variant="flat"
+          onPress={() => setIsSearchDrawerOpen(true)}
+        >
+          <Search size={20} />
+        </Button>
+
+        <FlowWalletConnect />
       </NavbarContent>
+
+      <SearchDrawer
+        isOpen={isSearchDrawerOpen}
+        onOpenChange={setIsSearchDrawerOpen}
+      />
     </Navbar>
   );
 }

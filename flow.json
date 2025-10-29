@@ -1,0 +1,28 @@
+{
+	"contracts": {
+		"AnkrAdapter": "./cadence/contracts/adapters/AnkrAdapter.cdc",
+		"FigmentAdapter": "./cadence/contracts/adapters/FigmentAdapter.cdc",
+		"IStakingProtocol": "./cadence/contracts/interfaces/IStakingProtocol.cdc",
+		"IncrementAdapter": "./cadence/contracts/adapters/IncrementAdapter.cdc",
+		"Market": "./cadence/contracts/core/Market.cdc",
+		"PriceOracle": "./cadence/contracts/helpers/PriceOracle.cdc",
+		"TrixyEvents": "./cadence/contracts/core/TrixyEvents.cdc",
+		"TrixyProtocol": "./cadence/contracts/TrixyProtocol.cdc",
+		"TrixyTypes": "./cadence/contracts/core/TrixyTypes.cdc"
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"testing": "127.0.0.1:3569",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"testnet-account": {
+			"address": "0x3564db973ae8bb36",
+			"key": {
+				"type": "file",
+				"location": "testnet-account.pkey"
+			}
+		}
+	}
+}

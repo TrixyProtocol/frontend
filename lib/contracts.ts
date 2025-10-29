@@ -1,0 +1,1 @@
+export const TRIXY_CONTRACT_ADDRESS = "0x3564db973ae8bb36";
