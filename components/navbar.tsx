@@ -64,7 +64,13 @@ export default function App() {
   }, []);
 
   return (
-    <Navbar isBordered classNames={{ wrapper: "max-w-7xl" }}>
+    <Navbar
+      isBordered
+      classNames={{
+        wrapper: "max-w-7xl",
+        base: "max-w-[1235px] mx-auto border-b border-x rounded-b-2xl",
+      }}
+    >
       <NavbarContent justify="start">
         <Link href="/">
           <NavbarBrand className="mr-4 gap-2">
@@ -75,7 +81,9 @@ export default function App() {
               src={"/logo-white.png"}
               width={32}
             />
-            <h1 className="hidden sm:block font-black text-2xl">Trixy</h1>
+            <h1 className="hidden sm:block font-black text-2xl">
+              Trixy Protocol
+            </h1>
           </NavbarBrand>
         </Link>
       </NavbarContent>

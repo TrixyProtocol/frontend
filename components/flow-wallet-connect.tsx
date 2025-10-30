@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar } from "@heroui/react";
 import { Connect, useFlowConfig } from "@onflow/react-sdk";
 import { useEffect, useState } from "react";
 
@@ -15,18 +16,8 @@ export function FlowWalletConnect() {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2 px-3 py-3 rounded-xl bg-default-100">
-        <div
-          className="w-2 h-2 rounded-full"
-          style={{
-            backgroundColor:
-              flowNetwork === "testnet"
-                ? "#00ef8b"
-                : flowNetwork === "mainnet"
-                  ? "#3b82f6"
-                  : "#a855f7",
-          }}
-        />
+      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-default-100">
+        <Avatar className="w-6 h-6" src="/images/token/flow.png" />
         <span className="text-xs font-medium capitalize">{flowNetwork}</span>
       </div>
 

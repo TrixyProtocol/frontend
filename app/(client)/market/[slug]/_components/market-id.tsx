@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
-import { TimerIcon } from "lucide-react";
+import { ChevronLeft, TimerIcon } from "lucide-react";
 import { Card, CardBody, Tooltip, Button } from "@heroui/react";
 import { useEffect, useState, useMemo } from "react";
 import { marked } from "marked";
+import { useRouter } from "next/navigation";
 
 import MarketChart from "./market-chart";
 import { PlaceBet } from "./place-bet";
@@ -17,6 +18,8 @@ import { useLatestPrice } from "@/hooks/queries/use-price";
 import { flowToUsd } from "@/lib/helper/price";
 
 export default function MarketId({ id }: { id: string }) {
+  const router = useRouter();
+
   const { data, isLoading } = useMarket(id);
   const market = data?.data;
   const { data: priceData } = useLatestPrice({ symbol: "FLOW" });
@@ -112,6 +115,13 @@ export default function MarketId({ id }: { id: string }) {
 
   return (
     <section className="pb-24 xl:pb-10">
+      <button
+        className="px-0 w-fit mb-5 text-default-500 text-sm flex items-center gap-1 hover:text-default-600 transition-colors cursor-pointer"
+        onClick={() => router.back()}
+      >
+        <ChevronLeft /> Back
+      </button>
+
       <div className="flex flex-col xl:flex-row gap-6">
         <div className="flex-1 space-y-6">
           <div>
@@ -131,7 +141,7 @@ export default function MarketId({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="flex flex-col xl:grid xl:grid-cols-[70%_1fr] xl:space-x-10 gap-6 xl:gap-0">
+          <div className="flex flex-col xl:grid xl:grid-cols-[1fr_384px] xl:space-x-10 gap-6 xl:gap-0">
             <div className="flex flex-col">
               <div className="flex flex-wrap items-center gap-2 md:gap-3">
                 <Card className="w-fit border border-neutral-800 bg-neutral-900/30 h-10">

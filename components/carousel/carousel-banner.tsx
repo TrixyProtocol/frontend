@@ -1,7 +1,15 @@
 import React from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import { Button, Card, CardFooter, CardHeader, Image } from "@heroui/react";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardFooter,
+  CardHeader,
+  Image,
+} from "@heroui/react";
+import Link from "next/link";
 
 import { DotButton, useDotButton } from "./carousel-dot";
 import { PrevButton, NextButton, usePrevNextButtons } from "./carousel-arrow";
@@ -51,11 +59,7 @@ function BannerCard({
       />
       <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 px-3 sm:px-4 py-2 sm:py-3">
         <div className="flex grow gap-2 items-center min-w-0">
-          <Image
-            alt="footer avatar"
-            className="rounded-full w-8 h-8 sm:w-10 sm:h-10 bg-black shrink-0"
-            src={avatar}
-          />
+          <Avatar size="sm" src={avatar} />
           <div className="flex flex-col min-w-0 flex-1">
             <p className="text-[10px] sm:text-tiny text-white/60 truncate">
               {footerTitle}
@@ -65,9 +69,15 @@ function BannerCard({
             </p>
           </div>
         </div>
-        <Button className="shrink-0 text-xs sm:text-sm" radius="full" size="sm">
-          {buttonText}
-        </Button>
+        <Link href="#">
+          <Button
+            className="shrink-0 text-xs sm:text-sm"
+            radius="full"
+            size="sm"
+          >
+            {buttonText}
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

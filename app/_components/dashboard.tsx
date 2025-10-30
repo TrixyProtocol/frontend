@@ -85,7 +85,7 @@ export default function Dashboard() {
       tag: "soon",
       title: "Testnet",
       bgImage: "/images/suit/clover.png",
-      footerTitle: "Join Testnet",
+      footerTitle: "Join Waitlist",
       footerSubtitle: "Be the first to try new features.",
       buttonText: "Soon",
     },
