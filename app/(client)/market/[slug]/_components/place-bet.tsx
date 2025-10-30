@@ -13,6 +13,7 @@ import {
   ModalBody,
   ModalFooter,
   Skeleton,
+  addToast,
 } from "@heroui/react";
 import { Info, CheckCircle2 } from "lucide-react";
 import { useFlowCurrentUser, useFlowConfig, Connect } from "@onflow/react-sdk";
@@ -32,6 +33,7 @@ interface PlaceBetProps {
 
 export function PlaceBet({ market, isLoading }: PlaceBetProps) {
   const { user } = useFlowCurrentUser();
+  const userAddress = user?.addr;
   const { flowNetwork } = useFlowConfig();
   const { placeBet, isPending, isSuccess, error, transactionId } =
     usePlaceBet();
@@ -146,26 +148,42 @@ export function PlaceBet({ market, isLoading }: PlaceBetProps) {
   };
 
   const handlePlaceBet = () => {
-    if (!user) {
-      alert("Please connect your wallet first");
+    if (!userAddress) {
+      addToast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet first",
+        color: "danger",
+      });
 
       return;
     }
 
     if (!betAmount || parseFloat(betAmount) <= 0) {
-      alert("Please enter a valid bet amount");
+      addToast({
+        title: "Invalid Bet Amount",
+        description: "Please enter a valid bet amount",
+        color: "danger",
+      });
 
       return;
     }
 
     if (selectedPosition === null) {
-      alert("Please select YES or NO");
+      addToast({
+        title: "Invalid Bet Position",
+        description: "Please select YES or NO",
+        color: "danger",
+      });
 
       return;
     }
 
     if (!market) {
-      alert("Market data not available");
+      addToast({
+        title: "Market Data Not Available",
+        description: "Market data is not available",
+        color: "danger",
+      });
 
       return;
     }
@@ -173,9 +191,13 @@ export function PlaceBet({ market, isLoading }: PlaceBetProps) {
     const betAmountNum = parseFloat(betAmount);
 
     if (balance < betAmountNum) {
-      alert(
-        `Insufficient balance. You have ${balance.toFixed(2)} FLOW but need ${betAmountNum.toFixed(2)} FLOW`,
-      );
+      addToast({
+        title: "Insufficient Balance",
+        description: `You have ${balance.toFixed(
+          2,
+        )} FLOW but need ${betAmountNum.toFixed(2)} FLOW`,
+        color: "danger",
+      });
 
       return;
     }
@@ -434,7 +456,7 @@ export function PlaceBet({ market, isLoading }: PlaceBetProps) {
         </CardBody>
       </Card>
 
-      {!user ? (
+      {!userAddress ? (
         <div className="space-y-3">
           <div className="flex justify-center">
             <Connect />

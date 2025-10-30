@@ -1,6 +1,7 @@
 "use client";
 
 import { useFlowMutate, useFlowConfig } from "@onflow/react-sdk";
+import { addToast } from "@heroui/react";
 
 import { TRIXY_CONTRACT_ADDRESS } from "@/lib/contracts";
 
@@ -88,13 +89,31 @@ export function useClaimWinnings() {
     const formattedMarketId =
       typeof marketId === "string" ? parseInt(marketId, 10) : marketId;
 
-    mutate({
-      cadence: transaction,
-      args: (arg, t) => [
-        arg(formattedCreator, t.Address),
-        arg(formattedMarketId.toString(), t.UInt64),
-      ],
-    });
+    mutate(
+      {
+        cadence: transaction,
+        args: (arg, t) => [
+          arg(formattedCreator, t.Address),
+          arg(formattedMarketId.toString(), t.UInt64),
+        ],
+      },
+      {
+        onSuccess: () => {
+          addToast({
+            title: "Winnings Claimed",
+            description: "Your winnings have been claimed successfully.",
+            color: "success",
+          });
+        },
+        onError: (error) => {
+          addToast({
+            title: "Error Claiming Winnings",
+            description: error.message,
+            color: "danger",
+          });
+        },
+      },
+    );
   };
 
   return {

@@ -3,6 +3,7 @@
 import { useFlowMutate, useFlowConfig } from "@onflow/react-sdk";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { addToast } from "@heroui/react";
 
 import { TRIXY_CONTRACT_ADDRESS } from "@/lib/contracts";
 
@@ -112,15 +113,33 @@ export function usePlaceBet() {
     const formattedMarketId =
       typeof marketId === "string" ? parseInt(marketId, 10) : marketId;
 
-    mutate({
-      cadence: transaction,
-      args: (arg, t) => [
-        arg(formattedCreator, t.Address),
-        arg(formattedMarketId.toString(), t.UInt64),
-        arg(option, t.String),
-        arg(formattedAmount, t.UFix64),
-      ],
-    });
+    mutate(
+      {
+        cadence: transaction,
+        args: (arg, t) => [
+          arg(formattedCreator, t.Address),
+          arg(formattedMarketId.toString(), t.UInt64),
+          arg(option, t.String),
+          arg(formattedAmount, t.UFix64),
+        ],
+      },
+      {
+        onSuccess: () => {
+          addToast({
+            title: "Bet Placed",
+            description: `Your bet of ${formattedAmount} FLOW on ${option} has been placed successfully.`,
+            color: "success",
+          });
+        },
+        onError: (error) => {
+          addToast({
+            title: "Error Claiming Winnings",
+            description: error.message,
+            color: "danger",
+          });
+        },
+      },
+    );
   };
 
   return {
