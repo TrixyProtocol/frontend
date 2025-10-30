@@ -70,7 +70,7 @@ export function transformChartData(
   flowPriceUsd?: number,
 ): MultiLineSeriesData[] {
   const series: MultiLineSeriesData[] = [];
-  const convertToUsd = (value: number) => 
+  const convertToUsd = (value: number) =>
     flowPriceUsd ? value * flowPriceUsd : value;
   const currencyLabel = flowPriceUsd ? "USD" : "Flow";
 
@@ -79,7 +79,7 @@ export function transformChartData(
       series.push({
         id: "volume-yes",
         name: `Yes (${currencyLabel})`,
-        data: data.volume.yes.map(point => ({
+        data: data.volume.yes.map((point) => ({
           time: point.time,
           value: convertToUsd(point.value),
         })),
@@ -94,7 +94,7 @@ export function transformChartData(
       series.push({
         id: "volume-no",
         name: `No (${currencyLabel})`,
-        data: data.volume.no.map(point => ({
+        data: data.volume.no.map((point) => ({
           time: point.time,
           value: convertToUsd(point.value),
         })),
@@ -109,7 +109,7 @@ export function transformChartData(
       series.push({
         id: "volume-total",
         name: `Total (${currencyLabel})`,
-        data: data.volume.total.map(point => ({
+        data: data.volume.total.map((point) => ({
           time: point.time,
           value: convertToUsd(point.value),
         })),
@@ -246,7 +246,7 @@ export function formatValue(
   }
 
   const prefix = isUsd ? "$" : "";
-  
+
   if (numValue < 1) {
     return prefix + numValue.toFixed(precision);
   } else if (numValue < 1000) {

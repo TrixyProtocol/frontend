@@ -14,7 +14,12 @@ export const marketService = {
     limit?: number;
     offset?: number;
     status?: "active" | "resolved" | "all";
-    sort_by?: "end_time" | "transaction_version" | "tvl" | "created_at" | "question";
+    sort_by?:
+      | "end_time"
+      | "transaction_version"
+      | "tvl"
+      | "created_at"
+      | "question";
     order?: "asc" | "desc";
   }) => {
     return apiClient.get<ApiResponse<Market[]>>(
