@@ -1,4 +1,6 @@
-const DEFAULT_API_URL = "http://localhost:3000/api";
+import { siteConfig } from "@/config/site";
+
+const DEFAULT_API_URL = `${siteConfig.url}/api`;
 
 const API_BASE_URL = DEFAULT_API_URL;
 
