@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { ChevronLeft, TimerIcon } from "lucide-react";
-import { Card, CardBody, Tooltip, Button } from "@heroui/react";
+import { Card, CardBody, Tooltip, Button, Skeleton } from "@heroui/react";
 import { useEffect, useState, useMemo } from "react";
 import { marked } from "marked";
 import { useRouter } from "next/navigation";
@@ -95,9 +95,70 @@ export default function MarketId({ id }: { id: string }) {
 
   if (isLoading) {
     return (
-      <section className="pb-10">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-neutral-400">Loading market...</div>
+      <section className="pb-24 xl:pb-10">
+        <Skeleton className="w-20 h-6 rounded-lg mb-5" />
+
+        <div className="flex flex-col xl:flex-row gap-6">
+          <div className="flex-1 space-y-6">
+            <div className="flex items-center gap-3 md:gap-5">
+              <Skeleton className="w-[60px] h-[60px] rounded-xl shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-8 w-3/4 rounded-lg" />
+                <Skeleton className="h-8 w-1/2 rounded-lg" />
+              </div>
+            </div>
+
+            <div className="flex flex-col xl:grid xl:grid-cols-[1fr_384px] xl:space-x-10 gap-6 xl:gap-0">
+              <div className="flex flex-col">
+                <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-6">
+                  <Skeleton className="w-32 h-10 rounded-lg" />
+                  <Skeleton className="w-48 h-10 rounded-lg" />
+                  <Skeleton className="w-40 h-10 rounded-lg" />
+                </div>
+
+                <Card className="mb-6">
+                  <CardBody className="p-6">
+                    <Skeleton className="h-64 w-full rounded-lg" />
+                  </CardBody>
+                </Card>
+
+                <Card>
+                  <CardBody className="p-6">
+                    <div className="space-y-3">
+                      <Skeleton className="h-4 w-full rounded-lg" />
+                      <Skeleton className="h-4 w-full rounded-lg" />
+                      <Skeleton className="h-4 w-3/4 rounded-lg" />
+                    </div>
+                  </CardBody>
+                </Card>
+              </div>
+
+              <div className="hidden xl:block xl:w-96">
+                <Card className="border border-neutral-800 bg-neutral-900/50">
+                  <CardBody className="p-6">
+                    <div className="space-y-4">
+                      <Skeleton className="h-6 w-32 rounded-lg" />
+                      <Skeleton className="h-12 w-full rounded-lg" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-8 flex-1 rounded-lg" />
+                        <Skeleton className="h-8 flex-1 rounded-lg" />
+                        <Skeleton className="h-8 w-16 rounded-lg" />
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+                <Card className="border border-neutral-800 bg-neutral-900/50 mt-4">
+                  <CardBody className="p-6">
+                    <div className="space-y-3">
+                      <Skeleton className="h-4 w-full rounded-lg" />
+                      <Skeleton className="h-4 w-full rounded-lg" />
+                      <Skeleton className="h-4 w-full rounded-lg" />
+                    </div>
+                  </CardBody>
+                </Card>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     );
@@ -225,7 +286,7 @@ export default function MarketId({ id }: { id: string }) {
               )}
             </div>
             <div className="hidden xl:block xl:w-96 xl:sticky xl:top-20 xl:self-start place-items-end">
-              <PlaceBet market={market} />
+              <PlaceBet isLoading={isLoading} market={market} />
             </div>
           </div>
         </div>

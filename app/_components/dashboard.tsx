@@ -11,8 +11,8 @@ import {
   CardBody,
   Button,
   Chip,
-  Spinner,
   Pagination,
+  Skeleton,
 } from "@heroui/react";
 import {
   ChevronDown,
@@ -58,6 +58,8 @@ export default function Dashboard() {
     limit: ITEMS_PER_PAGE,
     offset: (trendingPage - 1) * ITEMS_PER_PAGE,
     status: "active",
+    sort_by: "tvl",
+    order: "desc",
   });
 
   const shouldFetchBets = selectedTab === "Your Positions" && !!user;
@@ -189,8 +191,34 @@ export default function Dashboard() {
       {selectedTab === "trending" && (
         <>
           {marketsLoading ? (
-            <div className="flex justify-center py-10">
-              <Spinner color="white" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {Array.from({ length: 9 }).map((_, index) => (
+                <Card key={index} className="w-full p-3">
+                  <CardHeader className="grid grid-cols-[80%_auto] items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-10 h-10 rounded-lg" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-3 w-full rounded-lg" />
+                        <Skeleton className="h-3 w-4/5 rounded-lg" />
+                      </div>
+                    </div>
+                    <Skeleton className="w-12 h-12 rounded-full" />
+                  </CardHeader>
+                  <Divider />
+                  <CardBody>
+                    <div className="flex gap-2 items-center w-full">
+                      <Skeleton className="h-10 flex-1 rounded-lg" />
+                      <Skeleton className="h-10 flex-1 rounded-lg" />
+                    </div>
+                  </CardBody>
+                  <CardFooter>
+                    <div className="flex gap-2 items-center w-full justify-between">
+                      <Skeleton className="h-4 w-24 rounded-lg" />
+                      <Skeleton className="h-4 w-32 rounded-lg" />
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -334,9 +362,39 @@ export default function Dashboard() {
                 </p>
               </div>
             ) : betsLoading ? (
-              <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-10">
-                <Spinner color="white" />
-              </div>
+              Array.from({ length: 9 }).map((_, index) => (
+                <Card key={index} className="w-full p-3">
+                  <CardHeader className="grid grid-cols-[80%_auto] items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="w-10 h-10 rounded-lg" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-3 w-full rounded-lg" />
+                        <Skeleton className="h-3 w-4/5 rounded-lg" />
+                      </div>
+                    </div>
+                    <Skeleton className="w-16 h-6 rounded-lg" />
+                  </CardHeader>
+                  <Divider />
+                  <CardBody>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex justify-between">
+                        <Skeleton className="h-4 w-20 rounded-lg" />
+                        <Skeleton className="h-4 w-24 rounded-lg" />
+                      </div>
+                      <div className="flex justify-between">
+                        <Skeleton className="h-4 w-20 rounded-lg" />
+                        <Skeleton className="h-6 w-16 rounded-lg" />
+                      </div>
+                    </div>
+                  </CardBody>
+                  <CardFooter>
+                    <div className="flex gap-2 items-center w-full justify-between">
+                      <Skeleton className="h-4 w-32 rounded-lg" />
+                      <Skeleton className="h-6 w-16 rounded-lg" />
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))
             ) : userMarkets.length > 0 ? (
               userMarkets
                 .slice(

@@ -12,6 +12,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Skeleton,
 } from "@heroui/react";
 import { Info, CheckCircle2 } from "lucide-react";
 import { useFlowCurrentUser, useFlowConfig, Connect } from "@onflow/react-sdk";
@@ -26,9 +27,10 @@ import { TRIXY_CONTRACT_ADDRESS } from "@/lib/contracts";
 
 interface PlaceBetProps {
   market?: Market;
+  isLoading: boolean;
 }
 
-export function PlaceBet({ market }: PlaceBetProps) {
+export function PlaceBet({ market, isLoading }: PlaceBetProps) {
   const { user } = useFlowCurrentUser();
   const { flowNetwork } = useFlowConfig();
   const { placeBet, isPending, isSuccess, error, transactionId } =
@@ -185,6 +187,37 @@ export function PlaceBet({ market }: PlaceBetProps) {
       amount: betAmount,
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 w-full">
+        <Card className="border border-neutral-800 bg-neutral-900/50">
+          <CardBody className="p-6">
+            <div className="space-y-4">
+              <Skeleton className="h-6 w-32 rounded-lg" />
+              <Skeleton className="h-12 w-full rounded-lg" />
+              <div className="flex gap-2">
+                <Skeleton className="h-8 flex-1 rounded-lg" />
+                <Skeleton className="h-8 flex-1 rounded-lg" />
+                <Skeleton className="h-8 w-16 rounded-lg" />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+        <Card className="border border-neutral-800 bg-neutral-900/50">
+          <CardBody className="p-6">
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full rounded-lg" />
+              <Skeleton className="h-4 w-full rounded-lg" />
+              <Skeleton className="h-4 w-full rounded-lg" />
+              <Skeleton className="h-4 w-full rounded-lg" />
+            </div>
+          </CardBody>
+        </Card>
+        <Skeleton className="h-14 w-full rounded-lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">

@@ -5,6 +5,8 @@ import { ReactNode } from "react";
 
 import flowJSON from "../flow.json";
 
+import { siteConfig } from "@/config/site";
+
 interface FlowProviderWrapperProps {
   children: ReactNode;
 }
@@ -19,15 +21,13 @@ export function FlowProviderWrapper({ children }: FlowProviderWrapperProps) {
           "https://fcl-discovery.onflow.org/api/testnet/authn",
         flowNetwork: "testnet",
 
-        appDetailTitle: "Trixy Protocol",
-        appDetailUrl:
-          typeof window !== "undefined" ? window.location.origin : "",
-        appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
-        appDetailDescription:
-          "Multi-Protocol Yield Aggregator on Flow Blockchain",
+        appDetailTitle: siteConfig.name,
+        appDetailUrl: siteConfig.url,
+        appDetailIcon: "/logo-white.png",
+        appDetailDescription: siteConfig.description,
 
         computeLimit: 1000,
-        walletconnectProjectId: "9b70cfa398b2355a5eb9b1cf99f4a981",
+        walletconnectProjectId: "b4876f2e352abe23effb6273efd564af",
       }}
       flowJson={flowJSON}
     >

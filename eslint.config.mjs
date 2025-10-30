@@ -37,6 +37,7 @@ export default [
       "**/coverage",
       "**/.next",
       "**/build",
+      "cadence/*"
     ],
   },
   {
