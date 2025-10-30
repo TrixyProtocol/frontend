@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Tab,
   Tabs,
@@ -34,7 +34,8 @@ import { formatDate } from "@/lib/helper/date";
 import { Market } from "@/types/market.types";
 import { useLatestPrice } from "@/hooks/queries/use-price";
 import { flowToUsd } from "@/lib/helper/price";
-import { useFlowBets } from "@/hooks/queries/use-bet";
+import { useUserBets } from "@/hooks/queries/use-bet";
+import { UserBet } from "@/types/bet.types";
 import { useClaimWinnings } from "@/hooks/mutations/use-claim-winnings";
 import { TRIXY_CONTRACT_ADDRESS } from "@/lib/contracts";
 import { siteConfig } from "@/config/site";
@@ -52,6 +53,34 @@ export default function Dashboard() {
   const [positionsPage, setPositionsPage] = useState(1);
   const { claimWinnings, isPending: isClaimPending } = useClaimWinnings();
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+
+      if (tab) {
+        queueMicrotask(() => setSelectedTab(tab));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+
+      if (selectedTab === "trending") {
+        params.delete("tab");
+      } else {
+        params.set("tab", selectedTab);
+      }
+      const newUrl = params.toString()
+        ? `?${params.toString()}`
+        : window.location.pathname;
+
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, [selectedTab]);
+
   const ITEMS_PER_PAGE = 9;
 
   const { data: trendingMarketsData, isLoading: marketsLoading } = useMarkets({
@@ -63,11 +92,11 @@ export default function Dashboard() {
   });
 
   const shouldFetchBets = selectedTab === "Your Positions" && !!user;
-  const { data: userBetsData, isLoading: betsLoading } = useFlowBets(
+  const { data: userBetsData, isLoading: betsLoading } = useUserBets(
+    user?.addr || "",
     {
       limit: ITEMS_PER_PAGE,
       offset: (positionsPage - 1) * ITEMS_PER_PAGE,
-      user: user?.addr,
     },
     shouldFetchBets,
   );
@@ -125,27 +154,41 @@ export default function Dashboard() {
   ];
 
   const userBets = useMemo(() => {
-    return userBetsData || [];
+    return userBetsData?.data || [];
   }, [userBetsData]);
 
   const { data: allMarketsData } = useMarkets({ limit: 1000 });
 
-  const userMarkets = useMemo(() => {
+  const userPositions = useMemo(() => {
     if (!allMarketsData?.data || !userBets.length) return [];
-    const userMarketIds = new Set(userBets.map((bet) => bet.marketId));
 
-    return allMarketsData.data.filter((market) =>
-      market.BlockchainMarketID
-        ? userMarketIds.has(market.BlockchainMarketID)
-        : false,
-    );
+    return userBets
+      .map((bet) => {
+        const market = allMarketsData.data.find(
+          (m) => m.BlockchainMarketID?.toString() === bet.MarketID?.toString(),
+        );
+
+        if (market) {
+          return {
+            bet,
+            market,
+            position: bet.Position ? "YES" : "NO",
+          };
+        }
+
+        return null;
+      })
+      .filter(
+        (item): item is { bet: UserBet; market: Market; position: string } =>
+          item !== null,
+      );
   }, [allMarketsData, userBets]);
 
   const trendingTotalPages = trendingMarketsData?.meta?.total
     ? Math.ceil(trendingMarketsData.meta.total / ITEMS_PER_PAGE)
     : 1;
-  const positionsTotalPages = userMarkets.length
-    ? Math.ceil(userMarkets.length / ITEMS_PER_PAGE)
+  const positionsTotalPages = userPositions.length
+    ? Math.ceil(userPositions.length / ITEMS_PER_PAGE)
     : 1;
 
   const handleClaimWinnings = (market: Market) => {
@@ -385,6 +428,10 @@ export default function Dashboard() {
                         <Skeleton className="h-4 w-20 rounded-lg" />
                         <Skeleton className="h-6 w-16 rounded-lg" />
                       </div>
+                      <div className="flex justify-between">
+                        <Skeleton className="h-4 w-20 rounded-lg" />
+                        <Skeleton className="h-5 w-8 rounded-lg" />
+                      </div>
                     </div>
                   </CardBody>
                   <CardFooter>
@@ -395,29 +442,20 @@ export default function Dashboard() {
                   </CardFooter>
                 </Card>
               ))
-            ) : userMarkets.length > 0 ? (
-              userMarkets
+            ) : userPositions.length > 0 ? (
+              userPositions
                 .slice(
                   (positionsPage - 1) * ITEMS_PER_PAGE,
                   positionsPage * ITEMS_PER_PAGE,
                 )
-                .map((market) => {
-                  const userMarketBets = userBets.filter(
-                    (bet) => bet.marketId === market.BlockchainMarketID,
-                  );
-                  const totalStaked = userMarketBets.reduce(
-                    (sum, bet) => sum + parseFloat(bet.amount),
-                    0,
-                  );
+                .map(({ bet, market, position }) => {
+                  const betAmount = parseFloat(bet.Amount || "0");
                   const isResolved = market.Status === "resolved";
                   const userWon =
-                    isResolved &&
-                    userMarketBets.some(
-                      (bet) => bet.selectedOption === market.WinningOption,
-                    );
+                    isResolved && position === market.WinningOption;
 
                   return (
-                    <Link key={market.MarketID} href={`/market/${market.ID}`}>
+                    <Link key={bet.ID} href={`/market/${market.ID}`}>
                       <Card className="w-full p-3 transition-transform duration-200 hover:-translate-y-0.5">
                         <CardHeader className="grid grid-cols-[80%_auto] items-center gap-4">
                           <div className="flex items-center gap-2">
@@ -460,7 +498,7 @@ export default function Dashboard() {
                                 Your Bet:
                               </span>
                               <span className="font-semibold">
-                                {formatNumber(totalStaked, {
+                                {formatNumber(betAmount, {
                                   decimals: 2,
                                   suffix: " FLOW",
                                 })}
@@ -470,23 +508,38 @@ export default function Dashboard() {
                               <span className="text-neutral-400">
                                 Position:
                               </span>
-                              <div className="flex gap-1">
-                                {[
-                                  ...new Set(
-                                    userMarketBets.map((b) => b.selectedOption),
-                                  ),
-                                ].map((option) => (
-                                  <Chip
-                                    key={option}
-                                    color={
-                                      option === "YES" ? "success" : "danger"
-                                    }
-                                    size="sm"
-                                    variant="flat"
-                                  >
-                                    {option}
-                                  </Chip>
-                                ))}
+                              <Chip
+                                color={
+                                  position === "YES" ? "success" : "danger"
+                                }
+                                size="sm"
+                                variant="flat"
+                              >
+                                {position}
+                              </Chip>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-neutral-400">
+                                Staked In:
+                              </span>
+                              <div className="relative w-6 h-4 md:w-8 md:h-5 shrink-0">
+                                <Image
+                                  alt="avatar-1"
+                                  className="rounded-full absolute top-0 left-0 z-0"
+                                  height={16}
+                                  src={
+                                    market.yieldProtocol?.iconUrl ||
+                                    "/images/token/flow.png"
+                                  }
+                                  width={16}
+                                />
+                                <Image
+                                  alt="avatar-2"
+                                  className="rounded-full absolute top-0 left-2 md:left-3 z-10"
+                                  height={16}
+                                  src="/images/token/flow.png"
+                                  width={16}
+                                />
                               </div>
                             </div>
                           </div>

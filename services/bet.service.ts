@@ -1,4 +1,4 @@
-import type { Bet, BetStats } from "@/types/bet.types";
+import type { Bet, BetStats, UserBet } from "@/types/bet.types";
 import type { ApiResponse } from "@/types/api.types";
 
 import { apiClient } from "@/lib/api-client";
@@ -31,7 +31,7 @@ export const betService = {
     address: string,
     params?: { limit?: number; offset?: number },
   ) => {
-    return apiClient.get<ApiResponse<Bet[]>>(
+    return apiClient.get<ApiResponse<UserBet[]>>(
       `/bets/user/${address}`,
       params as Record<string, string | number>,
     );
