@@ -7,5 +7,6 @@ export const siteConfig = {
   links: {
     github: "https://github.com/TrixyProtocol",
     x: "https://x.com/trixy_fun",
+    mail: "mailto:support@trixy.fun",
   },
 };

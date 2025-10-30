@@ -22,6 +22,8 @@ type BannerCardProps = {
   footerTitle: string;
   footerSubtitle: string;
   buttonText: string;
+  link?: string;
+  linkTarget?: string;
 };
 
 type PropType = {
@@ -37,6 +39,8 @@ function BannerCard({
   footerTitle,
   footerSubtitle,
   buttonText,
+  link,
+  linkTarget = "_self",
 }: BannerCardProps) {
   return (
     <Card
@@ -69,7 +73,17 @@ function BannerCard({
             </p>
           </div>
         </div>
-        <Link href="#">
+        {link ? (
+          <Link href={link} target={linkTarget}>
+            <Button
+              className="shrink-0 text-xs sm:text-sm"
+              radius="full"
+              size="sm"
+            >
+              {buttonText}
+            </Button>
+          </Link>
+        ) : (
           <Button
             className="shrink-0 text-xs sm:text-sm"
             radius="full"
@@ -77,7 +91,7 @@ function BannerCard({
           >
             {buttonText}
           </Button>
-        </Link>
+        )}
       </CardFooter>
     </Card>
   );

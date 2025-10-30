@@ -37,6 +37,7 @@ import { flowToUsd } from "@/lib/helper/price";
 import { useFlowBets } from "@/hooks/queries/use-bet";
 import { useClaimWinnings } from "@/hooks/mutations/use-claim-winnings";
 import { TRIXY_CONTRACT_ADDRESS } from "@/lib/contracts";
+import { siteConfig } from "@/config/site";
 
 export default function Dashboard() {
   const { user } = useFlowCurrentUser();
@@ -96,6 +97,8 @@ export default function Dashboard() {
       footerTitle: "Stay tuned",
       footerSubtitle: "Check out our X to get the latest updates.",
       buttonText: "Follow",
+      link: siteConfig.links.x,
+      linkTarget: "_blank",
     },
     {
       tag: "feedback",
@@ -104,6 +107,8 @@ export default function Dashboard() {
       footerTitle: "Any Suggestions?",
       footerSubtitle: "Let us know what you think.",
       buttonText: "Submit",
+      link: siteConfig.links.mail,
+      linkTarget: "_blank",
     },
     {
       tag: "bug",
@@ -112,6 +117,8 @@ export default function Dashboard() {
       footerTitle: "Report",
       footerSubtitle: "Help us improve by reporting bugs.",
       buttonText: "Report",
+      link: siteConfig.links.mail,
+      linkTarget: "_blank",
     },
   ];
 
